@@ -12,18 +12,10 @@ import (
 )
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" && r.Method != "GET" {
-		http.Error(w, "invalid request method", http.StatusMethodNotAllowed)
-		return
-	}
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(map[string]string{"message": "hello noob"})
 }
 func registerHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "invalid request method", http.StatusMethodNotAllowed)
-		return
-	}
 
 	var RegisterDTO struct {
 		Username string `json:"username"`
@@ -72,10 +64,7 @@ func registerHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
-		http.Error(w, "invalid request method", http.StatusMethodNotAllowed)
-		return
-	}
+
 	var req struct {
 		Username string `json:"username"`
 		Password string `json:"password"`

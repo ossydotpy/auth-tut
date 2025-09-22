@@ -39,11 +39,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	http.HandleFunc("/", indexHandler)
-	http.HandleFunc("/register/", registerHandler)
-	http.HandleFunc("/login/", loginHandler)
-	http.Handle("/protected/", AuthMiddleware(http.HandlerFunc(protectedRouteHandler)))
+	mux := http.NewServeMux()
+	mux.HandleFunc("GET /", indexHandler)
+	mux.HandleFunc("POST /register", registerHandler)
+	mux.HandleFunc("POST /login", loginHandler)
+	mux.Handle("GET /protected", AuthMiddleware(http.HandlerFunc(protectedRouteHandler)))
 
 	log.Println("Ready!")
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":8080", StripTrailingSlash(mux))
 }

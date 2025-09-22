@@ -57,8 +57,16 @@ func AuthMiddleware(next http.Handler) http.Handler {
 func GetClaimsFromContext(r *http.Request) *Claims {
 	claim, ok := r.Context().Value(userContextKey).(*Claims)
 	if !ok {
-		// log.Println(err)
 		return nil
 	}
 	return claim
+}
+
+func StripTrailingSlash(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/" && strings.HasSuffix(r.URL.Path, "/") {
+			r.URL.Path = strings.TrimSuffix(r.URL.Path, "/")
+		}
+		next.ServeHTTP(w, r)
+	})
 }
